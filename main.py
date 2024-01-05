@@ -47,6 +47,8 @@ def process_subscribes(subscribes):
         if _nodes and len(_nodes) > 0:
             add_prefix(_nodes, subscribe)
             add_emoji(_nodes, subscribe)
+            if subscribe.get('subgroup'):
+                subscribe['tag'] = subscribe['tag'] + '-' + subscribe['subgroup'] + '-' + 'subgroup'
             if not nodes.get(subscribe['tag']):
                 nodes[subscribe['tag']] = []
             nodes[subscribe['tag']] += _nodes
@@ -262,7 +264,7 @@ def get_content_from_url(url, n=6):
 def get_content_form_file(url):
     print('处理: \033[31m' + url + '\033[0m')
     # print('Đang tải link đăng ký: \033[31m' + url + '\033[0m')
-    encoding = tool.get_encoding(url)
+    # encoding = tool.get_encoding(url)
     file_extension = os.path.splitext(url)[1]  # 获取文件的后缀名
     if file_extension.lower() == '.yaml':
         with open(url, 'rb') as file:
@@ -392,6 +394,24 @@ def pro_node_template(data_nodes, config_outbound, group):
 
 def combin_to_config(config, data):
     config_outbounds = config["outbounds"] if config.get("outbounds") else None
+    i = 0
+    for group in data:
+        if 'subgroup' in group:
+            i += 1
+            for out in config_outbounds:
+                if out.get("outbounds"):
+                    if out['tag'] == 'proxy':
+                        if '{all}' in out["outbounds"]:
+                            index_of_all = out["outbounds"].index('{all}')
+                            out["outbounds"][index_of_all] = (group.rsplit("-", 1)[0]).rsplit("-", 1)[-1]
+                        else:
+                            out["outbounds"].insert(i + 1, (group.rsplit("-", 1)[0]).rsplit("-", 1)[-1])
+            new_outbound = {'tag': (group.rsplit("-", 1)[0]).rsplit("-", 1)[-1], 'type': 'selector', 'outbounds': ['{' + group + '}']}
+            config_outbounds.insert(-4, new_outbound)
+        else:
+            for out in config_outbounds:
+                if out['tag'] == 'proxy':
+                    out["outbounds"].append('{' + group + '}')
     temp_outbounds = []
     if config_outbounds:
         # 提前处理all模板

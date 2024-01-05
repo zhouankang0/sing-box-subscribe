@@ -32,7 +32,7 @@ The above example shows: enable emoji, add ♥ before the node name, use v2rayng
 
 Example: https://sing-box-subscribe.vercel.app/config/https://gist.githubusercontent.com/Toperlock/b1ca381c32820e8c79669cbbd85b68ac/raw/dafae92fbe48ff36dae6e5172caa1cfd7914cda4/gistfile1.txt/&file=https://github.com/Toperlock/sing-box-subscribe/raw/main/config_template/config_template_groups_tun.json
 
-### 2023.11.04 Update: Two sub links can be processed, the format is: `/config/URL encoding`, `emoji`, `tag`, `prefix`, `UA`, `file` parameters cannot be written
+### 2023.11.04 Update: Two sub links can be processed, the format is: `/config/URL encoding`, `emoji`, `tag`, `prefix`, `UA` parameters cannot be written (supports 3 sub links by 2024.1.1)
 
 Use `|` to connect the two sub links and then [URL encode](https://www.urlencoder.org/) and put them after `config/`, as shown in the figure:
 
@@ -211,16 +211,18 @@ In this file, you can add subscription links and basic settings.
             "tag": "airport1_tag", //You can keep the default without modification
             "enabled": true,
             "emoji": 1, //Add flag emoji
+            "subgroup": "",
             "prefix": "", //Do not add node name prefix
-            "User-Agent":"clashmeta", //Set browser UA
+            "User-Agent":"clashmeta" //Set browser UA
         },
         {
             "url": "https://5gtocdocao.com/api/v1/client/subscribe?token=xx",
             "tag": "airport2_tag", //You can keep the default without modification
             "enabled": false,
             "emoji": 0, //Do not add flag emoji
+            "subgroup": "named", //Name the subscription link
             "prefix": "❤️node_name prefix - ", //Add node name prefix
-            "User-Agent":"clashmeta", //Set browser UA
+            "User-Agent":"clashmeta" //Set browser UA
         }
     ],
     "auto_set_outbounds_dns":{
@@ -240,7 +242,7 @@ In this file, you can add subscription links and basic settings.
 
 > Supports setting up a clash subscription link
 
-> SSupport setting up a sing-box subscription link
+> Supports setting up a sing-box subscription link
 
 > Supports setting up a local file paths (**content as standard URI links or Clash field**)
 
@@ -266,6 +268,8 @@ In this file, you can add subscription links and basic settings.
 - `enabled`: Optional. **Set it to false, and the subscription will be ignored**.
 
 - `emoji`: Optional. **Set it to false or 0, and the node name will not have a country flag emoji**.
+
+- `subgroup`: Optional. Name the subscription link and generate an outbound.
 
 - `prefix`: Optional. Set a custom prefix that will be added to the beginning of the node names. If not set, no prefix will be added.
 

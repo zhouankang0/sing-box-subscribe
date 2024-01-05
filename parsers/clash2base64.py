@@ -118,7 +118,7 @@ def clash2v2ray(share_link):
             "cipher": share_link['cipher'],
             "obfs": share_link['obfs'],
             "password": base64.b64encode(share_link.get('password', '').encode('utf-8')).decode('utf-8'),
-            "obfsparam": base64.b64encode(share_link.get('obfs-param', '').encode('utf-8')).decode('utf-8'),
+            "obfsparam": base64.b64encode(share_link.get('obfs-param').encode('utf-8')).decode('utf-8') if share_link.get('obfs-param') != None else '',
             "protoparam": base64.b64encode(share_link.get('protocol-param', '').encode('utf-8')).decode('utf-8'),
             "remarks": base64.b64encode(share_link.get('name', '').encode('utf-8')).decode('utf-8'),
             "group": base64.b64encode(share_link.get('group', '').encode('utf-8')).decode('utf-8')
@@ -192,7 +192,7 @@ def clash2v2ray(share_link):
             vless_info["host"] = share_link['ws-opts'].get('headers', {}).get('Host', '')
             link = "vless://{uuid}@{server}:{port}?encryption=none&security={security}&sni={sni}&fp={fp}&type={type}&host={host}&path={path}&flow={flow}&allowInsecure={allowInsecure}".format(**vless_info)
         if vless_info['type'] == 'grpc':
-            if share_link.get('grpc-opts').get('grpc-service-name') != '/' :
+            if share_link.get('grpc-opts', {}).get('grpc-service-name', '') not in ['/', ''] :
                 vless_info["serviceName"] = unquote(share_link.get('grpc-opts').get('grpc-service-name'))
             else:
                 vless_info["serviceName"] = ''
